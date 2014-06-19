@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">HRM Demo</string>
+    <string name="read_my_heart_rate">read my heart rate</string>
+
+    
+    <!-- Menu item strings. -->
+    <string name="read_aloud">Read aloud</string>
+    <string name="stop">Stop</string>
+
+</resources>

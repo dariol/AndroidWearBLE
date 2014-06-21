@@ -38,10 +38,10 @@ public class GlassService extends Service {
     private LiveCard mLiveCard;    
     String previousString;
     
-//  private String mDeviceName = "Wahoo HRM V1.7";
-//  private String mDeviceAddress = "DC:BB:C5:15:AF:86";
-  private String mDeviceName = "Wahoo HRM V2.1";
-  private String mDeviceAddress = "C4:18:B8:93:54:50";
+  private String mDeviceName = "Wahoo HRM V1.7";
+  private String mDeviceAddress = "DC:BB:C5:15:AF:86";
+//  private String mDeviceName = "Wahoo HRM V2.1";
+//  private String mDeviceAddress = "C4:18:B8:93:54:50";
   
     private boolean mConnected;
     private BluetoothLeService mBluetoothLeService;
@@ -71,30 +71,19 @@ public class GlassService extends Service {
         });
         
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
-        bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);         
+        bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+        
         registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
         
-        if(mDeviceAddress!=null) {
-        	connect();
-        } else {
-            Intent chooseIntent = new Intent(getBaseContext(), CardScrollActivity.class);
-            chooseIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            getApplication().startActivity(chooseIntent);
-    	}
+//            Intent chooseIntent = new Intent(getBaseContext(), CardScrollActivity.class);
+//            chooseIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            getApplication().startActivity(chooseIntent);
     }
-
-	private void connect() {
-		if (mBluetoothLeService != null) {
-            final boolean result = mBluetoothLeService.connect(mDeviceAddress);
-            Log.d(TAG, "Connect request result=" + result);
-        }
-	}
 
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
     }
-
     
 	@Override
     public void onDestroy() {
@@ -104,8 +93,6 @@ public class GlassService extends Service {
         }
         mSpeech.shutdown();
         mSpeech = null;
-        
-//        unregisterReceiver(intentReceiver); //TODO: check if registered
         
         unregisterReceiver(mGattUpdateReceiver);
         
@@ -143,7 +130,7 @@ public class GlassService extends Service {
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
                 mConnected = false;
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
-            	
+            	Log.i(TAG,"ACTION_GATT_SERVICES_DISCOVERED");
 //                displayGattServices(mBluetoothLeService.getSupportedGattServices());
             	
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {

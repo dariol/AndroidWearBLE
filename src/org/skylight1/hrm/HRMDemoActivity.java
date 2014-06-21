@@ -29,14 +29,14 @@ public class HRMDemoActivity extends Activity {
 	private int HIGH_LIMIT = 90;
 	private int LOW_LIMIT = 85;
 	
-//    private String mDeviceName = "Wahoo HRM V1.7";
-//    private String mDeviceAddress = "DC:BB:C5:15:AF:86";
-    private String mDeviceName = "Wahoo HRM V2.1";
-    private String mDeviceAddress = "C4:18:B8:93:54:50";
+    private String mDeviceName = "Wahoo HRM V1.7";
+    private String mDeviceAddress = "DC:BB:C5:15:AF:86";
+//    private String mDeviceName = "Wahoo HRM V2.1";
+//    private String mDeviceAddress = "C4:18:B8:93:54:50";
 
     private boolean mConnected;
     private BluetoothLeService mBluetoothLeService;
-    private BluetoothGattCharacteristic mNotifyCharacteristic;
+	String prevStrBeatMessage = null;
 
 
     @Override
@@ -90,6 +90,7 @@ public class HRMDemoActivity extends Activity {
 	        }
         }
     };
+	private String previousBeat;
 
     @Override
     protected void onResume() {
@@ -124,7 +125,6 @@ public class HRMDemoActivity extends Activity {
     	// d = (rssi-A)/-20 (where A = rssi at one meter)
     	String rssiString = Integer.toString(result);
     	Log.i(TAG,"rssi: "+rssiString);
-//        mRSSIView.setText(rssiString);
 	}
 
     private static IntentFilter makeGattUpdateIntentFilter() {
@@ -140,8 +140,11 @@ public class HRMDemoActivity extends Activity {
     
     private void setDisplay(final String beat) {
     	if(beat != null) {
-			mText.setText(beat);
-			sendAndroidWearNotification(beat);
+    		if(previousBeat!=beat) {
+    			mText.setText(beat);
+    			sendAndroidWearNotification(beat);
+			}
+			previousBeat = beat;
     	}
     }
     
@@ -165,22 +168,24 @@ public class HRMDemoActivity extends Activity {
     		strBeatMessage = "wake up!";
     		iconBeatMessage = R.drawable.ic_slowheart;
     	}
-    	Log.d(TAG,strBeatMessage);
-//		NotificationManagerCompat.from(this).cancelAll();
-		Intent viewIntent = new Intent(this, HRMDemoActivity.class);
-		viewIntent.putExtra(EXTRA_EVENT_ID, notificationId);
-		PendingIntent viewPendingIntent = PendingIntent.getActivity(this, 0, viewIntent, 0);
-
-		NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-		        .setContentTitle("HRM Demo")
-		        .setContentText(strBeatMessage)
-		        .setSmallIcon(R.drawable.ic_launcher)
-		        .setLargeIcon(BitmapFactory.decodeResource(getResources(), iconBeatMessage))
-		        .setContentIntent(viewPendingIntent);
-
-        Notification notification = new WearableNotifications.Builder(notificationBuilder).build();
-
-		NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-		notificationManager.notify(notificationId, notification);
+    	if(prevStrBeatMessage !=strBeatMessage) {
+	    	NotificationManagerCompat.from(this).cancelAll();
+			Intent viewIntent = new Intent(this, HRMDemoActivity.class);
+			viewIntent.putExtra(EXTRA_EVENT_ID, notificationId);
+			PendingIntent viewPendingIntent = PendingIntent.getActivity(this, 0, viewIntent, 0);
+	
+			NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+			        .setContentTitle("HRM Demo")
+			        .setContentText(strBeatMessage)
+			        .setSmallIcon(R.drawable.ic_launcher)
+			        .setLargeIcon(BitmapFactory.decodeResource(getResources(), iconBeatMessage))
+			        .setContentIntent(viewPendingIntent);
+	
+	        Notification notification = new WearableNotifications.Builder(notificationBuilder).build();
+	
+			NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+			notificationManager.notify(notificationId, notification);
+    	}
+    	prevStrBeatMessage=strBeatMessage;
 	}
 }

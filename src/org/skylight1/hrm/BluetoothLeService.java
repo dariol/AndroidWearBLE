@@ -60,7 +60,9 @@ public class BluetoothLeService extends Service {
                 mConnectionState = STATE_CONNECTED;
                 broadcastUpdate(intentAction);
                 Log.i(TAG, "connected to GATT server");
-                mBluetoothGatt.discoverServices();
+                if(mBluetoothGatt!=null) {
+                	mBluetoothGatt.discoverServices();
+                }
 //                readRSSIContinually(true);  // optional
 
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {

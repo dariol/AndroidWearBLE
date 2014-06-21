@@ -37,6 +37,7 @@ public class GlassService extends Service {
     private TextToSpeech mSpeech;
     private LiveCard mLiveCard;    
     String previousString;
+    boolean speakAloud;
     
   private String mDeviceName = "Wahoo HRM V1.7";
   private String mDeviceAddress = "DC:BB:C5:15:AF:86";
@@ -56,8 +57,9 @@ public class GlassService extends Service {
     public class HRMDemoBinder extends Binder {
         public void readAloud() {
             Resources res = getResources();
-            String headingText = "connecting to nearest heart rate monitor";
+            String headingText = "enable speaking heart rate";
             mSpeech.speak(headingText, TextToSpeech.QUEUE_FLUSH, null);
+            speakAloud = true;
         }
     }
     
@@ -144,64 +146,19 @@ public class GlassService extends Service {
         }
     };
 
-/*
-    private boolean processCharacteristic(BluetoothGattCharacteristic characteristic) {    	
-        if (mBluetoothLeService!=null) {
-            final int charaProp = characteristic.getProperties();
-            
-            if ((charaProp & BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE) == BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE) {
-            	byte value = getWriteValue();
-            	BluetoothGattCharacteristic writeCharacteristic = BleProfiles.processWriteCharacteristic(characteristic, value);
-            	if(writeCharacteristic!=null) {
-            		mBluetoothLeService.writeCharacteristic(writeCharacteristic);
-            	}
-            }
-            else if ((charaProp & BluetoothGattCharacteristic.PROPERTY_WRITE) == BluetoothGattCharacteristic.PROPERTY_WRITE) {
-            	byte value = getWriteValue();
-            	BluetoothGattCharacteristic writeCharacteristic = BleProfiles.processWriteCharacteristic(characteristic, value);                        	
-            	if(writeCharacteristic!=null) {
-            		mBluetoothLeService.writeCharacteristic(writeCharacteristic);
-            	}
-            	//note: ideally callbacks e.g. onWrite.., onRead.., etc should be handled before additional calls
-            }
-            else if ((charaProp & BluetoothGattCharacteristic.PROPERTY_READ) == BluetoothGattCharacteristic.PROPERTY_READ) {
-                // If there is an active notification on a characteristic, clear
-                // it first so it doesn't update the data field on the user interface.
-                if (mNotifyCharacteristic != null) {
-                    mBluetoothLeService.setCharacteristicNotification(mNotifyCharacteristic, false);
-                    mNotifyCharacteristic = null;
-                }
-                mBluetoothLeService.readCharacteristic(characteristic);
-            }
-            else if ((charaProp & BluetoothGattCharacteristic.PROPERTY_NOTIFY) == BluetoothGattCharacteristic.PROPERTY_NOTIFY) {
-                mNotifyCharacteristic = characteristic;
-                mBluetoothLeService.setCharacteristicNotification(characteristic, true);
-            }
-          return true;
-        }
-	    return false;
-    }
-*/
 
 	protected byte getWriteValue() {
 		return BleCharacteristics.ALERT_LEVEL_HIGH;
 	}
-
-	///////////
-	
-//	private final BroadcastReceiver intentReceiver = new BroadcastReceiver() {
-//		@Override
-//		public void onReceive(Context context, Intent intent) {
-//            mLiveCard.navigate();
-//		}
-//	};
 	
 	private int previousBeat;
 
     private void setDisplay(int beat) {
     	if(beat != 0) {
     			if(previousBeat!=beat) {
-    				mSpeech.speak(""+beat, TextToSpeech.QUEUE_FLUSH, null);
+    				if(speakAloud) {
+    					mSpeech.speak(""+beat, TextToSpeech.QUEUE_FLUSH, null);
+    				}
     	            mLiveCardView.setTextViewText(R.id.hrm_text, ""+beat);
     	            mLiveCard.setViews(mLiveCardView);
     			}

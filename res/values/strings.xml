@@ -1,7 +1,11 @@
 <resources>
     <string name="app_name">HRM Demo</string>
-    <string name="read_my_heart_rate">read my heart rate</string>
-
+    <string name="read_my_heart_rate">monitor a heart</string>
+	<string name="connecting">connecting&#8230;</string>
+   	<string name="connected">connected</string>
+	<string name="disconnected">disconnected</string>
+	<string name="fastmessage">slow down, relax</string>
+	<string name="slowmessage">wake up!</string>			
     
     <!-- Menu item strings. -->
     <string name="read_aloud">Read aloud</string>

@@ -3,7 +3,6 @@ package org.skylight1.hrm;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.PendingIntent;
-import android.bluetooth.BluetoothGattCharacteristic;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -26,8 +25,8 @@ public class HRMDemoActivity extends Activity {
 
 	private TextView mStatus;
 	private TextView mText;
-	private int HIGH_LIMIT = 90;
-	private int LOW_LIMIT = 85;
+	private int HIGH_LIMIT = 91;
+	private int LOW_LIMIT = 86;
 	
     private String mDeviceName = "Wahoo HRM V1.7";
     private String mDeviceAddress = "DC:BB:C5:15:AF:86";
@@ -78,9 +77,9 @@ public class HRMDemoActivity extends Activity {
                 mConnected = false;
                 mStatus.setText("disconnected");
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
-                Log.e(TAG,"SERVICES_DISCOVERED");
-            } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {          	
-                Log.e(TAG,"DATA: "+intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
+//                Log.e(TAG,"SERVICES_DISCOVERED");
+            } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
+//                Log.e(TAG,"DATA: "+intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
                 
                 setDisplay(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
                 
@@ -160,12 +159,12 @@ public class HRMDemoActivity extends Activity {
     		return;
     	}
  
-    	String strBeatMessage = "slow down, relax";
+    	String strBeatMessage = getString(R.string.fastmessage);
     	int iconBeatMessage = R.drawable.ic_fastheart;
     	if(beat < HIGH_LIMIT && beat > LOW_LIMIT) {
     		return;
     	} else if(beat < LOW_LIMIT) {
-    		strBeatMessage = "wake up!";
+    		strBeatMessage = getString(R.string.slowmessage);
     		iconBeatMessage = R.drawable.ic_slowheart;
     	}
     	if(prevStrBeatMessage !=strBeatMessage) {
@@ -173,11 +172,13 @@ public class HRMDemoActivity extends Activity {
 			Intent viewIntent = new Intent(this, HRMDemoActivity.class);
 			viewIntent.putExtra(EXTRA_EVENT_ID, notificationId);
 			PendingIntent viewPendingIntent = PendingIntent.getActivity(this, 0, viewIntent, 0);
-	
+			long pattern[] = {0,1000};
 			NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
 			        .setContentTitle("HRM Demo")
 			        .setContentText(strBeatMessage)
 			        .setSmallIcon(R.drawable.ic_launcher)
+			        .setPriority(NotificationCompat.PRIORITY_MAX)
+			        .setVibrate(pattern)
 			        .setLargeIcon(BitmapFactory.decodeResource(getResources(), iconBeatMessage))
 			        .setContentIntent(viewPendingIntent);
 	

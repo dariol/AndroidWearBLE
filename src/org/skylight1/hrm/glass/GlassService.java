@@ -1,13 +1,11 @@
 package org.skylight1.hrm.glass;
 
 import org.skylight1.hrm.BleCharacteristics;
-import org.skylight1.hrm.BleProfiles;
 import org.skylight1.hrm.BluetoothLeService;
 import org.skylight1.hrm.R;
 
 import android.app.PendingIntent;
 import android.app.Service;
-import android.bluetooth.BluetoothGattCharacteristic;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -16,13 +14,10 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.res.Resources;
 import android.os.Binder;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.widget.RemoteViews;
-import android.widget.TextView;
 
 import com.google.android.glass.timeline.LiveCard;
 
@@ -46,7 +41,6 @@ public class GlassService extends Service {
   
     private boolean mConnected;
     private BluetoothLeService mBluetoothLeService;
-    private BluetoothGattCharacteristic mNotifyCharacteristic;
 
     private final HRMDemoBinder mBinder = new HRMDemoBinder();
 

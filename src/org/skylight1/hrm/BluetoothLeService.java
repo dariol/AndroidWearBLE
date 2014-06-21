@@ -17,7 +17,6 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.util.Log;
 
 public class BluetoothLeService extends Service {
@@ -83,7 +82,7 @@ public class BluetoothLeService extends Service {
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
             	
-				if(gatt.getServices().size()<8 && retries<5) {
+				if(gatt.getServices().size()<4 && retries<5) {
 					retries++;
 					Log.w(TAG,"found only "+gatt.getServices().size()+" services, retrying discoverServices...");
 					try {Thread.sleep(50);} catch(InterruptedException ioe){}
@@ -118,7 +117,6 @@ public class BluetoothLeService extends Service {
 				}
 			}
 			setCharacteristicNotification(characteristic, value);	
-			Log.i(TAG,"setCharacteristicNotification "+value);
 		}
 		@Override
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
@@ -329,8 +327,4 @@ public class BluetoothLeService extends Service {
 		}
 	}
 
-//    public List<BluetoothGattService> getSupportedGattServices() {
- //       if (mBluetoothGatt == null) return null;
-  //      return mBluetoothGatt.getServices();
-   // }
 }

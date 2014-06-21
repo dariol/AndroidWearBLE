@@ -25,6 +25,7 @@ public class HRMDemoActivity extends Activity {
 
 	private TextView mStatus;
 	private TextView mText;
+	//TODO: have Android phone app's settings set the limits
 	private int HIGH_LIMIT = 91;
 	private int LOW_LIMIT = 86;
 	
@@ -158,7 +159,7 @@ public class HRMDemoActivity extends Activity {
     	if(beat==0) {
     		return;
     	}
- 
+		long pattern[] = {0,1000}; 
     	String strBeatMessage = getString(R.string.fastmessage);
     	int iconBeatMessage = R.drawable.ic_fastheart;
     	if(beat < HIGH_LIMIT && beat > LOW_LIMIT) {
@@ -172,7 +173,7 @@ public class HRMDemoActivity extends Activity {
 			Intent viewIntent = new Intent(this, HRMDemoActivity.class);
 			viewIntent.putExtra(EXTRA_EVENT_ID, notificationId);
 			PendingIntent viewPendingIntent = PendingIntent.getActivity(this, 0, viewIntent, 0);
-			long pattern[] = {0,1000};
+			
 			NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
 			        .setContentTitle("HRM Demo")
 			        .setContentText(strBeatMessage)

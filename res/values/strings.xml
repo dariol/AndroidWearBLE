@@ -6,6 +6,10 @@
 	<string name="disconnected">disconnected</string>
 	<string name="fastmessage">slow down, relax</string>
 	<string name="slowmessage">wake up!</string>			
+    <string name="title_devices">BLE Device Scan</string>
+    <string name="error_bluetooth_not_supported">Bluetooth not supported.</string>
+    <string name="ble_not_supported">BLE is not supported</string>
+    <string name="unknown_device">Unknown device</string>
     
     <!-- Menu item strings. -->
     <string name="read_aloud">Read aloud</string>
